@@ -169,29 +169,31 @@ async function loadLatestUpdates(page = 1) {
                                 <img src="${imgUrl}" class="w-100 h-100" style="object-fit: cover; transition: transform 0.3s;" alt="${item.title}">
                             </a>
                         </div>
-
-                        <div class="w-100">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h5 class="mb-0 text-truncate" style="max-width: 85%;">
-                                <h5 class="mb-0 text-truncate" style="max-width: 70%;">
-                                    <a href="${linkUrl}" class="text-dark text-decoration-none fw-bold hover-primary">
-                                        ${item.title}
-                                    </a>
-                                </h5>
-                                <span class="badge bg-light text-secondary border rounded-pill px-3">${dateStr}</span>
-                                <span class="badge bg-light text-secondary border rounded-pill px-4">${dateStr}</span>
-                            </div>
-
-                            <p class="text-muted mb-0" style="font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6;">
-                                ${item.description || 'ไม่มีรายละเอียดเพิ่มเติม'}
-                            </p>
-
-                            <div class="mt-2">
-                                <a href="${linkUrl}" class="text-decoration-none small text-primary fw-bold">
-                                    ${hasVideo ? '<i class="bi-play-circle-fill me-1"></i> Video Content' : '<i class="bi-file-text-fill me-1"></i> Article'}
-                                </a>
-                            </div>
+                    <div class="w-100">
+                        <div class="d-flex justify-content-end mb-1"> 
+                            <span class="badge bg-light text-secondary border rounded-pill px-4">${dateStr}</span>
                         </div>
+                        
+                        <div class="mb-2">
+                            <h5 class="mb-0">
+                                <a href="${linkUrl}" class="text-dark text-decoration-none fw-bold hover-primary">
+                                    ${item.title}
+                                </a>
+                            </h5>
+                        </div>
+
+                        <p class="text-muted mb-0" style="font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6;">
+                            ${item.description || 'ไม่มีรายละเอียดเพิ่มเติม'}
+                        </p>
+
+                        <div class="mt-2">
+                            <a href="${linkUrl}" class="text-decoration-none small text-primary fw-bold">
+                                ${hasVideo ? '<i class="bi-play-circle-fill me-1"></i> Video Content' : '<i class="bi-file-text-fill me-1"></i> Article'}
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
                     </div>
                 </div>
             `;

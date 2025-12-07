@@ -39,8 +39,8 @@ async function loadFeaturedSection() {
                             
                             <div style="height: 200px; overflow: hidden; border-radius: 10px 10px 0 0;">
                                 <img src="${imgUrl}" class="img-fluid w-100 h-100" 
-                                     style="object-fit: cover;" 
-                                     alt="${item.title}">
+                                    style="object-fit: cover;" 
+                                    alt="${item.title}">
                             </div>
 
                             <div class="p-4">
