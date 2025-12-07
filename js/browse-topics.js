@@ -179,6 +179,7 @@ async function loadLatestUpdates(page = 1) {
                                     </a>
                                 </h5>
                                 <span class="badge bg-light text-secondary border rounded-pill px-3">${dateStr}</span>
+                                <span class="badge bg-light text-secondary border rounded-pill px-4">${dateStr}</span>
                             </div>
 
                             <p class="text-muted mb-0" style="font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6;">
