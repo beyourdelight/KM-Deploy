@@ -249,7 +249,7 @@ strong {
 .site-header {
 background-image: linear-gradient(15deg, var(--secondary-color) 0%, #B0E0E6 100%);
   padding-top: 150px;
-  padding-bottom: 80px;
+  padding-bottom: 130px;
 }
 
 .site-header .container {
@@ -690,6 +690,7 @@ background-image: linear-gradient(15deg, var(--secondary-color) 0%, #B0E0E6 100%
   border-radius: var(--border-radius-medium);
   position: relative;
   overflow: hidden;
+  padding: 30px;
 }
 
 .topics-detail-block-image {
@@ -1140,8 +1141,8 @@ blockquote {
   }
 
   .section-padding {
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 80px;
+    padding-bottom: 130px;
   }
   
   .navbar {
