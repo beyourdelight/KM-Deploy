@@ -19,41 +19,46 @@
     <main>
 
     <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand" href="index.html">
-                    <img src="images/logo.svg" id="nav-logo" alt="COSCI Logo" style="height: 50px; width: auto;">
-                </a>
-
-                <div class="d-lg-none ms-auto me-3">
-                    <a href="index.html" class="navbar-icon bi-search me-3"></a>
-                    <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
-                </div>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-lg-5 me-lg-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="categories.html">Categories</a></li>
-                </ul>
-
-                <div class="d-none d-lg-flex align-items-center">
-                    <a href="index.html" class="navbar-icon bi-search me-3"></a>
-                    <div class="dropdown">
-                        <a class="navbar-icon bi-person dropdown-toggle remove-arrow" href="javascript:void(0);" role="button" id="profileDropdown" aria-expanded="false"></a>
-                        <ul class="dropdown-menu dropdown-menu-end profile-menu shadow" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="profile.html">View Profile</a></li>
-                            <li><a class="dropdown-item" href="my-favorite.html">My Favorites</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#" id="logoutBtn">Log Out</a></li>
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">
+                        <img src="images/logo.svg" id="nav-logo" alt="COSCI Logo" style="height: 50px; width: auto;">
+                    </a>
+                    <div class="d-lg-none ms-auto me-3">
+                        <a href="index.html" class="navbar-icon bi-search me-3"></a>
+                        <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
+                    </div>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-5 me-lg-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Home</a>
+                            </li>
+                
+                            <li class="nav-item">
+                                <a class="nav-link" href="categories.html">
+                                    Categories
+                                </a>
+                            </li>
                         </ul>
+                        <div class="dropdown">
+                            <a class="navbar-icon bi-person dropdown-toggle remove-arrow"
+                            href="javascript:void(0);" role="button" id="profileDropdown">
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end profile-menu shadow"
+                                aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" href="profile.html">View Profile</a></li>
+                                <li><a class="dropdown-item" href="my-favorite.html">My Favorites</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn">Log Out</a></li>
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-            </div>
-        </nav>
+            </nav>
 
 <section class="dashboard-hero" style="padding: 100px 0 50px; background: linear-gradient(135deg, #4C83FF, #1E5AA8); color: white; text-align: center;">
     <h1 style="font-size: 36px; font-weight: 700; margin: 0;">Admin Dashboard</h1>
