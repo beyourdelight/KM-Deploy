@@ -23,7 +23,7 @@ async function loadFeaturedSection() {
                 ? `${CONFIG.MEDIA_URL}${item.coverImage.url}` 
                 : 'images/topics/undraw_Remote_design_team_re_urdx.png'; 
 
-            // -- 2. เช็ค Logic ลิงก์ (ตามที่คุณต้องการ) --
+            // -- 2. เช็ค Logic ลิงก์  --
             // ถ้ามีวิดีโอ (videoList มีข้อมูล) -> ไปหน้า view-content.html
             // ถ้าไม่มีวิดีโอ (เป็นบทความ) -> ไปหน้า topics-detail.html
             const hasVideo = item.videoList && item.videoList.length > 0;

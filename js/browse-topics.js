@@ -237,13 +237,13 @@ function renderPagination(meta, container) {
     // ปุ่มตัวเลข
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-             paginationHTML += `
+            paginationHTML += `
                 <li class="page-item ${i === currentPage ? 'active' : ''}">
                     <a class="page-link" href="#" onclick="event.preventDefault(); loadLatestUpdates(${i})">${i}</a>
                 </li>
             `;
         } else if (i === currentPage - 2 || i === currentPage + 2) {
-             paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
         }
     }
 

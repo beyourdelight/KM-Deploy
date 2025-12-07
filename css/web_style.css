@@ -423,22 +423,21 @@ background-image: linear-gradient(15deg, var(--secondary-color) 0%, #B0E0E6 100%
     display: none !important;
 }
 
-/* caret ใหม่ ชี้ลงจากฝั่งไอคอนโปรไฟล์ */
-.profile-menu::before {
+/* .profile-menu::before {
     content: "";
     position: absolute;
-    top: -10px; /* ระยะเหนือกล่อง dropdown */
-    right: 16px; /* ชิดฝั่งขวา (ฝั่งไอคอนโปรไฟล์) */
+    top: -10px; 
+    right: 16px; 
     width: 0;
     height: 0;
 
-    /* สร้าง caret แบบสามเหลี่ยม */
+    
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-bottom: 10px solid white;
 
     z-index: 20;
-}
+} */
 
 /* จัดไอคอนให้ตรงกลาง */
 .navbar-icon {
