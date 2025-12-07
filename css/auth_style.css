@@ -1,0 +1,215 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+}
+
+/* Main Layout Container */
+.main-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* --- Left Panel (Purple Side) --- */
+.left-panel {
+    width: 40%;
+    background: linear-gradient(to bottom, #1277C2, #1A4B7C); 
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.left-panel .brand-logo {
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.left-panel .brand-logo i {
+    font-size: 3rem;
+    color: #00aaff;
+}
+
+.left-panel .brand-logo h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.left-panel .brand-logo span {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+/* --- Right Panel (White Side) --- */
+.right-panel {
+    width: 60%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 450px;
+}
+
+/* Headings */
+.section-title {
+    margin-bottom: 10px;
+    border-left: 5px solid #7899aa;
+    padding-left: 15px;
+}
+
+.section-title h2 {
+    font-size: 2.2rem;
+    color: #333;
+    font-weight: 700;
+}
+
+.section-title h2 span {
+    font-weight: 300;
+    color: #333;
+}
+
+/* Subtext & Links */
+.sub-text {
+    color: #666;
+    margin-bottom: 40px;
+    font-size: 0.95rem;
+}
+
+.sub-text a {
+    color: #1b419a;
+    text-decoration: underline;
+}
+
+/* Form Inputs */
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    color: #333;
+}
+
+.input-group input:focus {
+    border-bottom: 1px solid #00aaff;
+}
+
+.input-group input::placeholder {
+    color: #999;
+    font-weight: 300;
+}
+
+/* Checkbox & Forgot Password row */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-container input {
+    accent-color: #37bfe8;
+}
+
+.forgot-pass {
+    color: #5e6b6e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Main Button */
+.btn-primary {
+    background-color: #072f78;
+    color: #fff;
+    border: none;
+    padding: 12px 35px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #1277C2;
+}
+
+/* Social Media Section */
+.social-login {
+    margin-top: 40px;
+}
+
+.social-login p {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-social {
+    flex: 1;
+    max-width: 140px;
+    border: none;
+    padding: 10px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.3s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+    .left-panel {
+        width: 100%;
+        height: 25vh;
+    }
+    .right-panel {
+        width: 100%;
+        padding: 40px 20px;
+        justify-content: center;
+    }
+}
