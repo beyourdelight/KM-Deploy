@@ -1175,6 +1175,9 @@ blockquote {
     padding-bottom: 0;
   }
 }
+.badge.rounded-pill {
+    padding: 0.2rem 2rem !important;
+}
 
 @media screen and (max-width: 480px) {
   h1 {
