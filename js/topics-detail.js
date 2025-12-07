@@ -1,11 +1,20 @@
 // frontend/web/js/topics-detail.js
 
 document.addEventListener("DOMContentLoaded", async () => {
+    // 🛑 1. เช็คสิทธิ์ก่อนเลย (Gatekeeper)
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+        alert("กรุณาเข้าสู่ระบบเพื่อเข้าชมเนื้อหา");
+        window.location.href = 'index.html'; // ดีดกลับหน้าแรก (หรือหน้า login.html)
+        return; // หยุดการทำงานทุกอย่าง
+    }
+
+    // 2. ถ้ามีบัตรผ่าน ค่อยให้ทำงานต่อ
     loadTopicDetail();
 });
 
 // ==========================================
-// 1. ฟังก์ชันโหลดเนื้อหาหลัก
+// 2. ฟังก์ชันโหลดเนื้อหาหลัก
 // ==========================================
 async function loadTopicDetail() {
     console.log("🏁 Start Loading Page...");
@@ -14,10 +23,15 @@ async function loadTopicDetail() {
         let paramId = urlParams.get('id'); 
         let apiUrl = "";
 
-        // 1. หา URL เพื่อดึงข้อมูล
+        // หา URL
         if (paramId) {
             apiUrl = `${CONFIG.API_URL}/api/knowledge-items/${paramId}?populate=*`;
         } else {
+            // กรณีไม่มี ID ให้ดีดกลับหน้า Categories ดีกว่า (หรือจะดึงล่าสุดก็ได้แล้วแต่ดีไซน์)
+            // window.location.href = 'categories.html'; 
+            // return;
+            
+            // (แบบเดิม: ดึงตัวล่าสุด)
             console.warn("⚠️ ไม่พบ ID -> ดึงตัวล่าสุด");
             const res = await fetch(`${CONFIG.API_URL}/api/knowledge-items?sort[0]=createdAt:desc&pagination[pageSize]=1&populate=*`);
             const json = await res.json();
@@ -33,24 +47,19 @@ async function loadTopicDetail() {
         if (!response.ok) throw new Error("API Connection Error");
         
         const json = await response.json();
-        const item = json.data; // <--- ตัวแปร item เกิดขึ้นตรงนี้
+        const item = json.data;
 
         if (!item) throw new Error("Data is null");
 
-        // --- 🟢 2. เรียกใช้ฟังก์ชันย่อย (ต้องเรียกข้างในนี้เท่านั้น) ---
-        
-        // ส่ง Document ID ไปให้ระบบ Favorite
+        // --- เรียกใช้ฟังก์ชันย่อย ---
         initFavoriteSystem(item); 
+        renderAttachments(item.attachments);
 
-        // แสดงยอดวิว
+        // --- แสดงผล Views ---
         const viewCountNum = (item.views !== null && item.views !== undefined) ? item.views : 0;
         console.log("👁 Current Views:", viewCountNum);
 
-        // แสดงไฟล์แนบ (Attachments) - *** จุดที่ต้องเรียก ***
-        renderAttachments(item.attachments);
-
-
-        // --- 3. แปะข้อมูลลง HTML ---
+        // --- แปะข้อมูล Text ---
         const heroTitle = document.getElementById('hero-title');
         const detailTitle = document.getElementById('detail-title');
         const titleText = item.title || 'Untitled';
@@ -60,22 +69,7 @@ async function loadTopicDetail() {
         const contentDiv = document.getElementById('detail-content');
         if (contentDiv) contentDiv.innerHTML = renderRichText(item.content);
 
-        // (ส่วนรูปภาพประกอบ ตัดออก หรือใช้ร่วมกันได้ตามดีไซน์)
-        // ถ้าต้องการแสดงรูปภาพที่แทรกมาด้วย
-        const imagesContainer = document.getElementById('detail-images');
-        if (imagesContainer && item.attachments && item.attachments.length > 0) {
-             // กรองเอารูปภาพอย่างเดียวมาโชว์ตรงนี้ (ถ้าต้องการ) หรือจะลบส่วนนี้ทิ้งก็ได้ถ้าใช้ renderAttachments แล้ว
-             const onlyImages = item.attachments.filter(f => f.mime.startsWith('image/'));
-             if (onlyImages.length > 0) {
-                imagesContainer.innerHTML = onlyImages.map(img => `
-                    <div class="col-lg-6 col-md-6 col-12 mb-4">
-                        <img src="${CONFIG.MEDIA_URL}${img.url}" class="img-fluid rounded shadow-sm">
-                    </div>
-                `).join('');
-             } else {
-                 imagesContainer.innerHTML = "";
-             }
-        }
+        // (ถ้ามีรูปภาพอื่นนอกจาก Attachments ก็จัดการตรงนี้ได้)
 
         // สั่งนับยอดวิว (+1)
         incrementViewCount(item.documentId);
@@ -112,105 +106,65 @@ function renderRichText(blocks) {
 }
 
 // ==========================================
-// 4. ฟังก์ชันแสดงไฟล์แนบ (Attachments)
+// 4. ฟังก์ชันแสดงไฟล์แนบ
 // ==========================================
 function renderAttachments(attachments) {
     const container = document.getElementById('attachments-container');
-    
-    // ถ้า HTML ไม่มี Container นี้
     if (!container) return;
-    
-    // ถ้าไม่มีไฟล์แนบ หรือเป็น Array ว่าง
     if (!attachments || attachments.length === 0) {
         container.innerHTML = '<p class="text-muted small">ไม่มีเอกสารแนบ</p>';
         return;
     }
 
     let html = '';
-    
     attachments.forEach(file => {
         const fileUrl = `${CONFIG.MEDIA_URL}${file.url}`;
         const fileName = file.name;
-        const fileExt = file.ext.toLowerCase(); // .pdf, .docx
+        const fileExt = file.ext.toLowerCase();
         const fileSize = (file.size).toFixed(2) + ' KB';
 
-        // เลือกไอคอนตามประเภทไฟล์
         let iconClass = 'bi-file-earmark-text'; 
         let iconColor = 'text-secondary';
 
-        if (fileExt.includes('pdf')) {
-            iconClass = 'bi-file-earmark-pdf-fill';
-            iconColor = 'text-danger'; 
-        } else if (fileExt.match(/(jpg|jpeg|png|gif|webp)$/)) {
-            iconClass = 'bi-file-earmark-image-fill';
-            iconColor = 'text-primary'; 
-        } else if (fileExt.match(/(doc|docx)$/)) {
-            iconClass = 'bi-file-earmark-word-fill';
-            iconColor = 'text-primary';
-        } else if (fileExt.match(/(xls|xlsx|csv)$/)) {
-            iconClass = 'bi-file-earmark-excel-fill';
-            iconColor = 'text-success'; 
-        } else if (fileExt.match(/(ppt|pptx)$/)) {
-            iconClass = 'bi-file-earmark-slides-fill';
-            iconColor = 'text-warning'; 
-        } else if (fileExt.match(/(zip|rar)$/)) {
-            iconClass = 'bi-file-earmark-zip-fill';
-            iconColor = 'text-dark';
-        }
+        if (fileExt.includes('pdf')) { iconClass = 'bi-file-earmark-pdf-fill'; iconColor = 'text-danger'; } 
+        else if (fileExt.match(/(jpg|jpeg|png|gif|webp)$/)) { iconClass = 'bi-file-earmark-image-fill'; iconColor = 'text-primary'; } 
+        else if (fileExt.match(/(doc|docx)$/)) { iconClass = 'bi-file-earmark-word-fill'; iconColor = 'text-primary'; } 
+        else if (fileExt.match(/(xls|xlsx|csv)$/)) { iconClass = 'bi-file-earmark-excel-fill'; iconColor = 'text-success'; } 
+        else if (fileExt.match(/(ppt|pptx)$/)) { iconClass = 'bi-file-earmark-slides-fill'; iconColor = 'text-warning'; } 
+        else if (fileExt.match(/(zip|rar)$/)) { iconClass = 'bi-file-earmark-zip-fill'; iconColor = 'text-dark'; }
 
-        // สร้าง HTML กล่องไฟล์
         html += `
         <a href="${fileUrl}" target="_blank" class="text-decoration-none text-dark">
             <div class="card border mb-2 shadow-sm hover-effect" style="border: 1px solid #dee2e6;">
                 <div class="card-body p-3 d-flex align-items-center">
-                    
-                    <div class="me-3">
-                        <i class="${iconClass} ${iconColor}" style="font-size: 2rem;"></i>
-                    </div>
-
+                    <div class="me-3"><i class="${iconClass} ${iconColor}" style="font-size: 2rem;"></i></div>
                     <div class="flex-grow-1">
                         <h6 class="mb-0 text-dark fw-bold" style="font-size: 1rem;">${fileName}</h6>
                         <small class="text-muted text-uppercase">${fileExt.replace('.','')} File • ${fileSize}</small>
                     </div>
-
-                    <div class="text-muted">
-                        <i class="bi bi-box-arrow-up-right"></i>
-                    </div>
-
+                    <div class="text-muted"><i class="bi bi-box-arrow-up-right"></i></div>
                 </div>
             </div>
         </a>`;
     });
-
     container.innerHTML = html;
 }
 
 // ==========================================
-// 3. ระบบ Favorite (Version จำค่าแม่นยำ)
+// 3. ระบบ Favorite (Version Custom API)
 // ==========================================
 async function initFavoriteSystem(contentItem) {
     const contentDocId = contentItem.documentId;
-    console.log("❤️ Init Favorite for:", contentDocId);
-
     const jwt = localStorage.getItem('jwt');
     const favoriteBtn = document.getElementById('favoriteBtn');
     if (!favoriteBtn || !contentDocId) return;
 
     const btnText = favoriteBtn.querySelector('span');
     const btnIcon = favoriteBtn.querySelector('i');
-    
     let currentFavDocIds = []; 
     let userDocId = null;
 
-    if (!jwt) {
-        favoriteBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('กรุณาเข้าสู่ระบบเพื่อบันทึกรายการโปรด');
-            window.location.href = 'index.html';
-        });
-        return;
-    }
-
+    // เช็คสถานะ (Load State)
     try {
         const res = await fetch(`${CONFIG.API_URL}/api/users/me?populate[favorites][fields][0]=documentId`, {
             headers: { 'Authorization': `Bearer ${jwt}` }
@@ -221,7 +175,6 @@ async function initFavoriteSystem(contentItem) {
             const favorites = user.favorites || [];
             currentFavDocIds = favorites.map(f => f.documentId);
             
-            // เช็คสถานะ
             const isFav = currentFavDocIds.includes(contentDocId);
             updateBtnUI(isFav);
         }
@@ -241,7 +194,8 @@ async function initFavoriteSystem(contentItem) {
 
     favoriteBtn.addEventListener('click', async (e) => {
         e.preventDefault();
-        if (!userDocId) { alert('Please Login'); return; }
+        // ปุ่ม Favorite ไม่ต้องเช็ค Login ซ้ำแล้ว เพราะถ้าไม่ Login จะเข้าหน้านี้ไม่ได้ตั้งแต่แรก
+        if (!userDocId) return; 
 
         const isFavNow = btnIcon.classList.contains('bi-bookmark-fill');
         let newFavs = isFavNow ? currentFavDocIds.filter(id => id !== contentDocId) : [...currentFavDocIds, contentDocId];
@@ -260,11 +214,7 @@ async function initFavoriteSystem(contentItem) {
                 currentFavDocIds = newFavs;
                 updateBtnUI(!isFavNow);
             } else { throw new Error('Failed'); }
-        } catch (err) { 
-            console.error(err); 
-            alert('Failed to save');
-            updateBtnUI(isFavNow); 
-        } 
+        } catch (err) { alert('Failed to save'); updateBtnUI(isFavNow); } 
         finally { favoriteBtn.style.pointerEvents = 'auto'; }
     });
 }
