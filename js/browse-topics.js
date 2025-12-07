@@ -173,6 +173,7 @@ async function loadLatestUpdates(page = 1) {
                         <div class="w-100">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="mb-0 text-truncate" style="max-width: 85%;">
+                                <h5 class="mb-0 text-truncate" style="max-width: 70%;">
                                     <a href="${linkUrl}" class="text-dark text-decoration-none fw-bold hover-primary">
                                         ${item.title}
                                     </a>
