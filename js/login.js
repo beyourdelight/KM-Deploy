@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.disabled = true;
 
                 // 2. ยิง API Login ของ Strapi (มาตรฐาน)
-                const response = await fetch('http://localhost:1337/api/auth/local', {
+                // const response = await fetch('http://localhost:1337/api/auth/local', {
+                const response = await fetch(`${CONFIG.API_URL}/api/auth/local`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
