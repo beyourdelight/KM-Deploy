@@ -89,7 +89,7 @@ async function loadBrowseTopics() {
                 const link = getLinkUrl(item);
                 const imgUrl = getImageUrl(item);
                 const views = item.views || 0;
-
+                const dateStr = formatDate(item.createdAt);
                 const cardHtml = `
                     <div class="col-lg-4 col-md-6 col-12 mb-4">
                         <div class="custom-block bg-white shadow-lg h-100">
@@ -99,7 +99,9 @@ async function loadBrowseTopics() {
                                         <h5 class="mb-1 text-truncate text-dark">${item.title}</h5>
                                         <p class="mb-0 text-muted small">Click to view</p>
                                     </div>
-                                    <span class="badge bg-light text-secondary border rounded-pill ms-2">${views} Views</span>
+                                    <div class="d-flex justify-content-end mb-1"> 
+                                    <span class="badge bg-light text-secondary border rounded-pill px-4">${dateStr}</span>
+                                </div>
                                 </div>
                                 <div style="height: 200px; overflow: hidden;">
                                     <img src="${imgUrl}" class="w-100 h-100" style="object-fit: cover;" alt="${item.title}">
