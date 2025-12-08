@@ -27,11 +27,9 @@ async function loadTopicDetail() {
         if (paramId) {
             apiUrl = `${CONFIG.API_URL}/api/knowledge-items/${paramId}?populate=*`;
         } else {
-            // กรณีไม่มี ID ให้ดีดกลับหน้า Categories ดีกว่า (หรือจะดึงล่าสุดก็ได้แล้วแต่ดีไซน์)
+            // กรณีไม่มี ID ให้ดีดกลับหน้า Categories 
             // window.location.href = 'categories.html'; 
             // return;
-            
-            // (แบบเดิม: ดึงตัวล่าสุด)
             console.warn("⚠️ ไม่พบ ID -> ดึงตัวล่าสุด");
             const res = await fetch(`${CONFIG.API_URL}/api/knowledge-items?sort[0]=createdAt:desc&pagination[pageSize]=1&populate=*`);
             const json = await res.json();
