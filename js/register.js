@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // 2. เตรียมข้อมูลส่งไปหา Strapi
             // URL นี้ต้องตรงกับเครื่องของคุณ (Backend)
             // เปลี่ยนจาก external-auth เป็น student-login
-            const API_URL = 'http://localhost:1337/api/student-login/register';
+            // const API_URL = 'http://localhost:1337/api/student-login/register';
+            const API_URL = `${CONFIG.API_URL}/api/student-login/register`;
 
             try {
                 // เปลี่ยนปุ่มเป็นสถานะกำลังโหลด (Optional UX)
