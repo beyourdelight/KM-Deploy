@@ -62,7 +62,7 @@
 
 <section class="dashboard-hero" style="padding: 100px 0 50px; background: linear-gradient(135deg, #4C83FF, #1E5AA8); color: white; text-align: center;">
     <h1 style="font-size: 36px; font-weight: 700; margin: 0;">Admin Dashboard</h1>
-    <p class="mt-2 text-white-50">Overview of system performance & statistics</p>
+    <p class="mt-2 text-white-50">system performance & statistics</p>
 </section>
 
 <section class="section-padding section-bg" style="background: #F8F9FA; padding: 40px 0;">
@@ -73,9 +73,9 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card shadow-sm p-3 rounded-4 border-0 h-100">
                     <div class="card-body">
-                        <h6 class="fw-bold text-muted small text-uppercase mb-2">Total Users</h6>
+                        <h6 class="fw-bold text-muted small text-uppercase mb-2">ยอดสมาชิกทั้งหมด</h6>
                         <h3 class="fw-bold mb-0 text-primary" id="stat-visitors">-</h3>
-                        <small class="text-muted">Registered members</small>
+                        <small class="text-muted">คน</small>
                     </div>
                 </div>
             </div>
@@ -83,9 +83,9 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card shadow-sm p-3 rounded-4 border-0 h-100">
                     <div class="card-body">
-                        <h6 class="fw-bold text-muted small text-uppercase mb-2">Total Documents</h6>
+                        <h6 class="fw-bold text-muted small text-uppercase mb-2">เอกสารทั้งหมด</h6>
                         <h3 class="fw-bold mb-0 text-success" id="stat-docs">-</h3>
-                        <small class="text-muted">Available resources</small>
+                        <small class="text-muted">เอกสาร</small>
                     </div>
                 </div>
             </div>
@@ -93,9 +93,9 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card shadow-sm p-3 rounded-4 border-0 h-100">
                     <div class="card-body">
-                        <h6 class="fw-bold text-muted small text-uppercase mb-2">Total Views</h6>
+                        <h6 class="fw-bold text-muted small text-uppercase mb-2">ยอดการเข้าชมทั้งหมด</h6>
                         <h3 class="fw-bold mb-0 text-warning" id="stat-views">-</h3>
-                        <small class="text-muted">Across all content</small>
+                        <small class="text-muted">ยอดการเข้าชม</small>
                     </div>
                 </div>
             </div>
@@ -104,59 +104,29 @@
 
         <div class="row g-4">
 
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="card shadow-sm p-4 rounded-4 border-0 h-100">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="fw-bold mb-0">Top 5 Most Viewed Content</h5>
+                        <h5 class="fw-bold mb-0">Top 5 เนื้อหาที่มีผู้ชมมากที่สุด</h5>
                     </div>
                     <div style="height: 300px;">
                         <canvas id="myChart"></canvas>
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-4">
-                <div class="card shadow-sm p-4 rounded-4 border-0 h-100">
-                    <h5 class="fw-bold mb-4">System Status</h5>
-                    
-                    <div class="d-flex flex-column gap-3">
-                        <div class="d-flex align-items-center p-3 rounded-3 bg-light">
-                            <i class="bi bi-hdd-network text-primary fs-4 me-3"></i>
-                            <div>
-                                <h6 class="mb-0 fw-bold">Server Status</h6>
-                                <small class="text-success">● Online (NAS Connected)</small>
-                            </div>
-                        </div>
-
-                        <div class="d-flex align-items-center p-3 rounded-3 bg-light">
-                            <i class="bi bi-database text-warning fs-4 me-3"></i>
-                            <div>
-                                <h6 class="mb-0 fw-bold">Database</h6>
-                                <small class="text-muted">Strapi CMS v5.0</small>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-info border-0 mb-0 small">
-                            <i class="bi bi-info-circle me-1"></i> Dashboard data refreshes automatically on reload.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card shadow-sm p-4 rounded-4 border-0">
-                    <h5 class="fw-bold mb-3">Recently Added Documents</h5>
+                    <h5 class="fw-bold mb-3">เอกสารที่เพิ่มล่าสุด</h5>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
                                 <tr class="text-muted small text-uppercase">
-                                    <th>Document Title</th>
-                                    <th>Category</th>
-                                    <th>Date Added</th>
-                                    <th>Views</th>
+                                    <th>ชื่อเอกสาร</th>
+                                    <th>วันที่เพิ่ม</th>
+                                    <th>ยอดการเข้าชม</th>
                                 </tr>
                             </thead>
                             <tbody>

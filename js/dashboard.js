@@ -126,7 +126,6 @@ function renderTable(items) {
         html += `
             <tr>
                 <td><div class="fw-bold text-truncate" style="max-width: 250px;">${item.title}</div></td>
-                <td><span class="badge bg-light text-dark border">${category}</span></td>
                 <td class="text-muted small">${date}</td>
                 <td><span class="fw-bold text-primary">${item.views || 0}</span></td>
             </tr>
