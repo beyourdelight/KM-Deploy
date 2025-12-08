@@ -32,30 +32,24 @@ async function loadVideoContent() {
     try {
         console.log(`🚀 Loading Content ID: ${docId}`);
         
-        // --- 🔥 แก้ไขจุดตาย: เขียน URL แบบ Manual และลดความซับซ้อน ---
-        // 1. ไม่ใช้ new URL() เพื่อคุม String เอง
-        // 2. ไม่ใช้ * (ดอกจัน) เพื่อเลี่ยง Firewall
-        // 3. ใช้ syntax ?populate[xxx][populate]=yyy แบบระบุชื่อ field
-        
+        // Construct URL
         let apiUrl = `${CONFIG.API_URL}/api/knowledge-items/${docId}`;
-        // ต่อ String เอาดื้อๆ เลย (Cloudflare ชอบแบบนี้มากกว่า)
-        apiUrl += `?populate[videoList][populate]=directFile`; // เจาะจงเอา directFile
-        apiUrl += `&populate[attachments]=true`;               // เอา attachments
-        apiUrl += `&populate[coverImage]=true`;                // เอา coverImage
+        apiUrl += `?populate[videoList][populate]=directFile`; 
+        apiUrl += `&populate[attachments]=true`;               
+        apiUrl += `&populate[coverImage]=true`;                
 
         console.log("🔗 Fetching Manual URL:", apiUrl);
         
         const response = await fetch(apiUrl);
         
         if (!response.ok) {
-            // ถ้ายัง 400 ให้ลอง Fallback แบบง่ายสุดๆ (ยอมไม่มีวิดีโอดีกว่าหน้าขาว)
             console.warn("⚠️ Complex URL failed, trying simple populate...");
             const simpleUrl = `${CONFIG.API_URL}/api/knowledge-items/${docId}?populate=*`;
             const fallbackRes = await fetch(simpleUrl);
             if (!fallbackRes.ok) throw new Error(`API Error: ${response.status}`);
             
             const fallbackJson = await fallbackRes.json();
-            processData(fallbackJson.data); // ไปทำงานต่อ
+            processData(fallbackJson.data); 
             return;
         }
         
@@ -72,18 +66,29 @@ async function loadVideoContent() {
 // แยกฟังก์ชันออกมาเพื่อให้เรียกใช้ซ้ำได้ (Clean Code)
 function processData(item) {
     // --- 2. เรียกใช้ฟังก์ชันย่อย ---
-    initFavoriteSystem(item);
-    renderAttachments(item.attachments);
+    if (typeof initFavoriteSystem === 'function') initFavoriteSystem(item);
+    if (typeof renderAttachments === 'function') renderAttachments(item.attachments);
 
-    // --- 3. แปะข้อมูล Text ---
+    // --- 3. แปะข้อมูล Text (Title) ---
     const heroTitle = document.getElementById('hero-title');
     if (heroTitle) heroTitle.innerText = item.title || 'Untitled';
 
     const contentTitle = document.getElementById('content-title');
     if (contentTitle) contentTitle.innerText = item.title || 'Untitled';
     
+    // --- 🔥 แก้ไขจุดที่ 1: ใช้ item.content และผ่าน renderRichText ---
     const contentBody = document.getElementById('content-body');
-    if (contentBody) contentBody.innerHTML = item.description ? item.description.replace(/\n/g, '<br>') : '-';
+    if (contentBody) {
+        // ลองแปลง Content (Rich Text) ก่อน ถ้าไม่มีค่อยไปเอา Description
+        const richTextHtml = renderRichText(item.content);
+        
+        if (richTextHtml) {
+            contentBody.innerHTML = richTextHtml;
+        } else {
+            // Fallback กรณีไม่มี content ให้ใช้ description
+            contentBody.innerHTML = item.description ? item.description.replace(/\n/g, '<br>') : '-';
+        }
+    }
     
     // --- 4. Logic ยอดวิว ---
     const viewCount = document.getElementById('view-count');
@@ -100,7 +105,6 @@ function processData(item) {
         const video = videoList[0];
         
         if (video.sourceType === 'Direct') {
-                // เช็คว่ามีไฟล์และมี URL
                 if (video.directFile && video.directFile.url) {
                     const fileUrl = `${CONFIG.MEDIA_URL}${video.directFile.url}`;
                     const mimeType = video.directFile.mime || 'video/mp4';
@@ -111,20 +115,20 @@ function processData(item) {
                         Your browser does not support the video tag.
                     </video>`;
                 } else {
-                    playerContainer.innerHTML = `<div class="text-white text-center p-5">Video file not found (Check populate logic)</div>`;
+                    playerContainer.innerHTML = `<div class="text-white text-center p-5">Video file not found</div>`;
                 }
 
         } else if (video.externalUrl) {
                 const getEmbed = (url) => {
-                const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
-                return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+                    const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
+                    return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
                 };
                 const embedUrl = getEmbed(video.externalUrl);
                 
                 if(embedUrl) {
-                playerContainer.innerHTML = `<iframe width="100%" height="100%" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>`;
+                    playerContainer.innerHTML = `<iframe width="100%" height="100%" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>`;
                 } else {
-                playerContainer.innerHTML = `<div class="text-white text-center p-5"><a href="${video.externalUrl}" target="_blank" class="btn btn-light">Open Link</a></div>`;
+                    playerContainer.innerHTML = `<div class="text-white text-center p-5"><a href="${video.externalUrl}" target="_blank" class="btn btn-light">Open Link</a></div>`;
                 }
 
         } else if (video.sourceType === 'NAS' && video.nasPath) {
@@ -154,6 +158,40 @@ async function incrementViewCount(docId) {
             method: 'PUT', headers: { 'Content-Type': 'application/json' }
         });
     } catch (e) { console.warn("View inc failed", e); }
+}
+
+// ==========================================
+// 🔌 Helper Function: Render Rich Text (Strapi V5 Blocks)
+// ==========================================
+function renderRichText(content) {
+    if (!content) return '';
+    
+    // ถ้าเป็น Array (Blocks Editor ของ Strapi V5)
+    if (Array.isArray(content)) {
+        return content.map(block => {
+            switch (block.type) {
+                case 'paragraph':
+                    return `<p>${block.children.map(child => child.text).join('')}</p>`;
+                case 'heading':
+                    return `<h${block.level}>${block.children.map(child => child.text).join('')}</h${block.level}>`;
+                case 'list':
+                    const tag = block.format === 'ordered' ? 'ol' : 'ul';
+                    const items = block.children.map(item => `<li>${item.children.map(c => c.text).join('')}</li>`).join('');
+                    return `<${tag}>${items}</${tag}>`;
+                case 'image':
+                    return `<img src="${block.image.url}" alt="${block.image.alternativeText || ''}" class="img-fluid my-3" />`;
+                case 'quote':
+                    return `<blockquote class="blockquote">${block.children.map(c => c.text).join('')}</blockquote>`;
+                case 'code':
+                    return `<pre><code>${block.children.map(c => c.text).join('')}</code></pre>`;
+                default:
+                    return '';
+            }
+        }).join('');
+    } 
+    
+    // กรณีเป็น String ธรรมดา (Markdown หรือ Plain text)
+    return String(content).replace(/\n/g, '<br>');
 }
 
 // ==========================================

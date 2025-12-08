@@ -4,6 +4,6 @@
 // };
 
 const CONFIG = {
-    API_URL: "https://before-hopefully-canvas-silly.trycloudflare.com",  
-    MEDIA_URL: "https://before-hopefully-canvas-silly.trycloudflare.com" 
+    API_URL: "https://lightning-comparing-explicit-rapid.trycloudflare.com",  
+    MEDIA_URL: "https://lightning-comparing-explicit-rapid.trycloudflare.com" 
 };
