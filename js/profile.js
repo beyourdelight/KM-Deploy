@@ -11,9 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. ฟังก์ชันดึงข้อมูล User (และจำ ID)
-    async function fetchUserProfile() {
+    // async function fetchUserProfile() {
+    //     try {
+    //         const response = await fetch('http://localhost:1337/api/users/me', {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Authorization': `Bearer ${jwt}`
+    //             }
+    //         });
+        async function fetchUserProfile() {
         try {
-            const response = await fetch('http://localhost:1337/api/users/me', {
+            const response = await fetch(`${CONFIG.API_URL}/api/users/me`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${jwt}`
@@ -72,9 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 submitBtn.innerText = 'Updating...';
                 submitBtn.disabled = true;
-
-                // *** แก้ไข URL ตรงนี้: ใช้ ID แทนคำว่า me ***
-                const response = await fetch(`http://localhost:1337/api/users/${currentUserId}`, {
+                // const response = await fetch(`http://localhost:1337/api/users/${currentUserId}`, {
+                //     method: 'PUT',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'Authorization': `Bearer ${jwt}`
+                //     },
+                //     body: JSON.stringify({
+                //         password: newPassword
+                //     })
+                // });
+                const response = await fetch(`${CONFIG.API_URL}/api/users/${currentUserId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
