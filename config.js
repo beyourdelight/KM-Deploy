@@ -4,6 +4,6 @@
 // };
 
 const CONFIG = {
-    API_URL: "https://lightning-comparing-explicit-rapid.trycloudflare.com",  
-    MEDIA_URL: "https://lightning-comparing-explicit-rapid.trycloudflare.com" 
+    API_URL: "https://relief-boxed-crest-arbitrary.trycloudflare.com",  
+    MEDIA_URL: "https://relief-boxed-crest-arbitrary.trycloudflare.com" 
 };
