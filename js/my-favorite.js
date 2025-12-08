@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.innerHTML = '<p class="text-center text-danger">เกิดข้อผิดพลาดในการเชื่อมต่อ</p>';
     }
 
-    // ฟังก์ชันวาด HTML
+    // ฟังก์ชัน HTML
     function renderList(items) {
         if (!items || items.length === 0) {
             container.innerHTML = `
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         items.forEach(item => {
             let imgUrl = 'images/topics/undraw_Remote_design_team_re_urdx.png'; 
             
-            // เช็ค cover image (รองรับทั้ง v4 และ v5 structure)
+            // เช็ค cover image \
             const cover = item.coverImage || item.cover_image;
             if (cover && cover.url) {
                 // เช็คว่า URL มี http ไหม ถ้าไม่มีให้ต่อ media url

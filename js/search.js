@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // 3. สร้างการ์ดแสดงผล (ใช้ Template เดียวกับ Latest Updates ที่เราทำสวยๆ ไว้)
+        // 3. สร้างการ์ดแสดงผล 
         let htmlContent = '';
 
         items.forEach(item => {

@@ -32,7 +32,7 @@ async function loadDashboardStats(jwt) {
         const resUsers = await fetch(`${CONFIG.API_URL}/api/users`, {
             headers: { 'Authorization': `Bearer ${jwt}` }
         });
-        const users = await resUsers.json(); // Strapi user endpoint returns array directly usually
+        const users = await resUsers.json(); // API ตอบกลับมาเป็น Array ของผู้ใช้
 
         // --- C. คำนวณตัวเลข (Calculation) ---
         

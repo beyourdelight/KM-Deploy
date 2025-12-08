@@ -48,7 +48,7 @@ function getSpinnerHtml(text = "กำลังโหลดข้อมูล...
 // ==========================================
 
 async function loadBrowseTopics() {
-    // Mapping Slug -> HTML ID
+    // ใช้ดึงข้อมูลจาก Server
     const categoryMap = {
         'academic': 'row-cat-1',
         'administration': 'row-cat-3',
@@ -185,7 +185,7 @@ async function loadLatestUpdates(page = 1) {
                         </div>
 
                         
-
+                        // ส่วนบอกประเภทเนื้อหา
                         <div class="mt-2">
                             <a href="${linkUrl}" class="text-decoration-none small text-primary fw-bold">
                                 ${hasVideo ? '<i class="bi-play-circle-fill me-1"></i> Video Content' : '<i class="bi-file-text-fill me-1"></i> Article'}

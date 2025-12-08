@@ -39,13 +39,14 @@ async function loadVideoContent() {
         console.log("🔗 Fetching Manual URL:", apiUrl);
         
         const response = await fetch(apiUrl);
-        
-        if (!response.ok) {
+
+        if (!response.ok) { 
             console.warn("⚠️ Complex URL failed, trying simple populate...");
             const simpleUrl = `${CONFIG.API_URL}/api/knowledge-items/${docId}?populate=*`;
             const fallbackRes = await fetch(simpleUrl);
             if (!fallbackRes.ok) throw new Error(`API Error: ${response.status}`);
             
+            // Logic: ถ้า Plan A พัง (เช่น เขียน Path ผิด หรือ Server ตอบ Error 400) ให้ใช้ Plan B
             const fallbackJson = await fallbackRes.json();
             processData(fallbackJson.data); 
             return;
