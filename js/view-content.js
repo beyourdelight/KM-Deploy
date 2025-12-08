@@ -1,5 +1,21 @@
 // frontend/web/js/view-content.js
+// function extractMediaUrl(media) {
+//     if (!media) return null;
 
+//     if (media.url) return media.url;  
+//     if (media.data?.attributes?.url) return media.data.attributes.url;
+
+//     return null;
+// }
+
+// function extractMediaMime(media) {
+//     if (!media) return null;
+
+//     if (media.mime) return media.mime;
+//     if (media.data?.attributes?.mime) return media.data.attributes.mime;
+
+//     return null;
+// }
 document.addEventListener("DOMContentLoaded", async () => {
     // 🛑 1. เช็คสิทธิ์ (Gatekeeper)
     const jwt = localStorage.getItem('jwt');
@@ -75,6 +91,7 @@ function processData(item) {
 
     const contentTitle = document.getElementById('content-title');
     if (contentTitle) contentTitle.innerText = item.title || 'Untitled';
+    const itemContent = item.content || item.description;
     
     // --- 🔥 แก้ไขจุดที่ 1: ใช้ item.content และผ่าน renderRichText ---
     const contentBody = document.getElementById('content-body');
@@ -100,6 +117,17 @@ function processData(item) {
     const videoList = item.videoList || [];
 
     console.log("🎬 Video List Data:", videoList);
+
+    // ตรวจสอบความถูกต้องของ Element และเคลียร์เนื้อหา/Class เก่าก่อนเริ่มทำงาน
+    if (!playerContainer) {
+        console.error("❌ Video Player Container ID 'video-player-container' not found.");
+        return;
+    }
+    
+    // 🔥 1. เคลียร์เนื้อหาและ Class เริ่มต้น (Spinner, Background)
+    playerContainer.innerHTML = ''; 
+    playerContainer.classList.remove('bg-dark', 'd-flex', 'align-items-center', 'justify-content-center', 'bg-light'); 
+    playerContainer.classList.add('ratio', 'ratio-16x9'); // ใส่ ratio กลับเข้าไปเป็นค่าเริ่มต้น
 
     if (videoList.length > 0) {
         const video = videoList[0];
@@ -132,25 +160,34 @@ function processData(item) {
                 }
 
         } else if (video.sourceType === 'NAS' && video.nasPath) {
-                const safePath = video.nasPath.replace(/\\/g, '\\\\');
-                playerContainer.innerHTML = `
-                <div class="text-center p-5 bg-light h-100 d-flex flex-column justify-content-center align-items-center">
-                    <i class="bi bi-hdd-network display-1 text-secondary"></i>
-                    <h5 class="mt-3 text-dark">Video on NAS</h5>
-                    <div class="input-group mb-3 mt-3 w-75">
-                        <input type="text" class="form-control" value="${video.nasPath}" readonly>
-                        <button class="btn btn-primary" onclick="window.copyNasPath('${safePath}')">Copy Path</button>
-                    </div>
-                </div>`;
+            
+            const safePath = video.nasPath.replace(/\\/g, '\\\\');
+            playerContainer.innerHTML = `
+            <div class="text-center p-5 h-100 d-flex flex-column justify-content-center align-items-center">
+                <i class="bi bi-hdd-network display-1 text-secondary"></i>
+                <h5 class="mt-3 text-dark">Video on NAS</h5>
+                <div class="input-group mb-3 mt-3 w-75">
+                    <input type="text" class="form-control" value="${video.nasPath}" readonly>
+                    <button class="btn btn-primary" onclick="window.copyNasPath('${safePath}')">Copy Path</button>
+                </div>
+            </div>`;
+            // สำหรับ NAS ควรใช้พื้นหลังสีอ่อน (bg-light) แทน
+            playerContainer.classList.add('bg-light', 'd-flex', 'align-items-center', 'justify-content-center'); 
+            
+        } else {
+            // ไม่ระบุ Source Type
+            playerContainer.innerHTML = `<div class="text-white h-100 d-flex align-items-center justify-content-center">Video data incomplete or unknown source type.</div>`;
+            playerContainer.classList.add('bg-dark', 'd-flex', 'align-items-center', 'justify-content-center'); 
         }
     } else {
-        playerContainer.innerHTML = `<div class="text-white h-100 d-flex align-items-center justify-content-center">No video available</div>`;
+        // ไม่มี Video List เลย
+        playerContainer.innerHTML = `<div class="text-white h-100 d-flex align-items-center justify-content-center">No video available in item data.</div>`;
+        playerContainer.classList.add('bg-dark', 'd-flex', 'align-items-center', 'justify-content-center');
     }
 
     // สั่งนับยอดวิว (+1)
     incrementViewCount(item.documentId);
-}
-
+// } <-- ไม่ต้องมี } ตรงนี้ เพราะอยู่ใน processData เดิม
 // ฟังก์ชันนับยอดวิว
 async function incrementViewCount(docId) {
     try {
@@ -159,7 +196,25 @@ async function incrementViewCount(docId) {
         });
     } catch (e) { console.warn("View inc failed", e); }
 }
+// ==========================================
+// Helper: แปลง Rich Text Blocks (สำหรับ Description)
+// ==========================================
+function renderRichText(blocks) {
+    if (!blocks) return "";
+    return blocks.map(b => {
+        // ตรวจสอบว่ามี children ก่อน
+        const textContent = b.children && b.children.length > 0 ? b.children.map(c => c.text).join('') : '';
 
+        if (b.type === 'paragraph' || !b.type) return `<p>${textContent}</p>`;
+        if (b.type === 'heading') return `<h${b.level} class="mt-4 mb-3">${textContent}</h${b.level}>`;
+        if (b.type === 'list') {
+            const tag = b.format === 'ordered' ? 'ol' : 'ul';
+            const items = b.children.map(li => `<li>${li.children && li.children.map(c=>c.text).join('')}</li>`).join('');
+            return `<${tag}>${items}</${tag}>`;
+        }
+        return "";
+    }).join('');
+}
 // ==========================================
 // 🔌 Helper Function: Render Rich Text (Strapi V5 Blocks)
 // ==========================================
@@ -242,6 +297,7 @@ function renderAttachments(attachments) {
     container.innerHTML = html;
 }
 
+
 // ==========================================
 // 3. ระบบ Favorite (Version Custom API)
 // ==========================================
@@ -318,4 +374,5 @@ async function initFavoriteSystem(contentItem) {
         } 
         finally { favoriteBtn.style.pointerEvents = 'auto'; }
     });
+}
 }

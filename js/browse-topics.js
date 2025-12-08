@@ -184,7 +184,7 @@ async function loadLatestUpdates(page = 1) {
                             </h5>
                         </div>
 
-                        <p class="text-muted mb-0" style="font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6;">
+                        <p class="text-muted mb-0" style="font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1;">
                             ${item.description || 'ไม่มีรายละเอียดเพิ่มเติม'}
                         </p>
 
