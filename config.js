@@ -4,6 +4,6 @@
 // };
 
 const CONFIG = {
-    API_URL: "https://url-technologies-safely-bags.trycloudflare.com ",  
-    MEDIA_URL: "https://url-technologies-safely-bags.trycloudflare.com " 
+    API_URL: "https://menus-enters-tracked-investing.trycloudflare.com",  
+    MEDIA_URL: "https://menus-enters-tracked-investing.trycloudflare.com" 
 };
