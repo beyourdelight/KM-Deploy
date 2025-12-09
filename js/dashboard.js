@@ -37,7 +37,7 @@ async function loadDashboardStats(jwt) {
         // --- C. คำนวณตัวเลข (Calculation) ---
         
         // 1. Total Documents
-        const totalDocs = documents.length; // (ถ้ามีเยอะกว่า 100 ต้องดู meta.pagination.total)
+        const totalDocs = documents.length; 
         const totalDocsReal = jsonDocs.meta?.pagination?.total || totalDocs;
 
         // 2. Total Views (รวมยอดวิวทุกอัน)
@@ -120,7 +120,7 @@ function renderTable(items) {
             day: 'numeric', month: 'short', year: '2-digit'
         });
 
-        // ดึงหมวดหมู่ (ถ้ามี)
+        // ดึงหมวดหมู่ 
         const category = item.category ? item.category.name : '-'; // ปรับตามชื่อ field จริง
 
         html += `

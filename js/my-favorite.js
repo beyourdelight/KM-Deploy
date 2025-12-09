@@ -1,3 +1,4 @@
+//
 // frontend/web/js/my-favorite.js
 document.addEventListener('DOMContentLoaded', async () => {
     const jwt = localStorage.getItem('jwt');
@@ -77,8 +78,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 imgUrl = cover.url.startsWith('http') ? cover.url : `${CONFIG.MEDIA_URL}${cover.url}`;
             }
 
-            const hasVideo = item.videoList && item.videoList.length > 0;
-            const targetId = item.documentId || item.id;
+            const hasVideo = item.videoList && item.videoList.length > 0; // เช็ค videoList
+            const targetId = item.documentId || item.id; // สำรองเผื่อมีแค่ id
             
             const detailPage = hasVideo 
                 ? `view-content.html?id=${targetId}` 
