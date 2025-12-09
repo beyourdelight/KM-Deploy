@@ -4,6 +4,6 @@
 // };
 
 const CONFIG = {
-    API_URL: "https://model-atlanta-sunrise-tactics.trycloudflare.com",  
-    MEDIA_URL: "https://model-atlanta-sunrise-tactics.trycloudflare.com" 
+    API_URL: "https://pro-correspondence-recognised-examines.trycloudflare.com",  
+    MEDIA_URL: "https://pro-correspondence-recognised-examines.trycloudflare.com" 
 };
