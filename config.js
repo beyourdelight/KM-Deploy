@@ -4,6 +4,6 @@
 // };
 
 const CONFIG = {
-    API_URL: "https://bob-structure-unless-rapidly.trycloudflare.com",  
-    MEDIA_URL: "https://bob-structure-unless-rapidly.trycloudflare.com" 
+    API_URL: "https://parameter-dam-choices-twelve.trycloudflare.com",  
+    MEDIA_URL: "https://parameter-dam-choices-twelve.trycloudflare.com" 
 };
