@@ -27,11 +27,9 @@ async function loadTopicDetail() {
         if (paramId) {
             apiUrl = `${CONFIG.API_URL}/api/knowledge-items/${paramId}?populate=*`;
         } else {
-            // กรณีไม่มี ID ให้ดีดกลับหน้า Categories ดีกว่า (หรือจะดึงล่าสุดก็ได้แล้วแต่ดีไซน์)
+            // กรณีไม่มี ID ให้ดีดกลับหน้า Categories 
             // window.location.href = 'categories.html'; 
             // return;
-            
-            // (แบบเดิม: ดึงตัวล่าสุด)
             console.warn("⚠️ ไม่พบ ID -> ดึงตัวล่าสุด");
             const res = await fetch(`${CONFIG.API_URL}/api/knowledge-items?sort[0]=createdAt:desc&pagination[pageSize]=1&populate=*`);
             const json = await res.json();
@@ -52,6 +50,7 @@ async function loadTopicDetail() {
         if (!item) throw new Error("Data is null");
 
         // --- เรียกใช้ฟังก์ชันย่อย ---
+        // --- ระบบ Favorite ---
         initFavoriteSystem(item); 
         renderAttachments(item.attachments);
 
@@ -68,8 +67,6 @@ async function loadTopicDetail() {
 
         const contentDiv = document.getElementById('detail-content');
         if (contentDiv) contentDiv.innerHTML = renderRichText(item.content);
-
-        // (ถ้ามีรูปภาพอื่นนอกจาก Attachments ก็จัดการตรงนี้ได้)
 
         // สั่งนับยอดวิว (+1)
         incrementViewCount(item.documentId);
@@ -115,16 +112,16 @@ function renderAttachments(attachments) {
         container.innerHTML = '<p class="text-muted small">ไม่มีเอกสารแนบ</p>';
         return;
     }
-
+    // สร้างรายการไฟล์แนบ
     let html = '';
     attachments.forEach(file => {
-        const fileUrl = `${CONFIG.MEDIA_URL}${file.url}`;
-        const fileName = file.name;
-        const fileExt = file.ext.toLowerCase();
-        const fileSize = (file.size).toFixed(2) + ' KB';
+        const fileUrl = `${CONFIG.MEDIA_URL}${file.url}`; // สมมติ file.url มี path เท่านั้น
+        const fileName = file.name; // ชื่อไฟล์
+        const fileExt = file.ext.toLowerCase(); // นามสกุลไฟล์
+        const fileSize = (file.size).toFixed(2) + ' KB'; // ขนาดไฟล์ (เป็น KB)
 
-        let iconClass = 'bi-file-earmark-text'; 
-        let iconColor = 'text-secondary';
+        let iconClass = 'bi-file-earmark-text'; // ไอคอนเริ่มต้น
+        let iconColor = 'text-secondary'; 
 
         if (fileExt.includes('pdf')) { iconClass = 'bi-file-earmark-pdf-fill'; iconColor = 'text-danger'; } 
         else if (fileExt.match(/(jpg|jpeg|png|gif|webp)$/)) { iconClass = 'bi-file-earmark-image-fill'; iconColor = 'text-primary'; } 
@@ -155,27 +152,27 @@ function renderAttachments(attachments) {
 // ==========================================
 async function initFavoriteSystem(contentItem) {
     const contentDocId = contentItem.documentId;
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwt'); // เข้าหน้านี้ได้ต้องล็อกอินแล้ว
     const favoriteBtn = document.getElementById('favoriteBtn');
-    if (!favoriteBtn || !contentDocId) return;
+    if (!favoriteBtn || !contentDocId) return; // ไม่มีปุ่มหรื่อไม่มีเนื้อหา
 
-    const btnText = favoriteBtn.querySelector('span');
-    const btnIcon = favoriteBtn.querySelector('i');
-    let currentFavDocIds = []; 
-    let userDocId = null;
+    const btnText = favoriteBtn.querySelector('span'); 
+    const btnIcon = favoriteBtn.querySelector('i'); 
+    let currentFavDocIds = []; // เก็บรายการโปรดปัจจุบัน
+    let userDocId = null; // เก็บ Document ID ของผู้ใช้
 
     // เช็คสถานะ (Load State)
     try {
         const res = await fetch(`${CONFIG.API_URL}/api/users/me?populate[favorites][fields][0]=documentId`, {
-            headers: { 'Authorization': `Bearer ${jwt}` }
+            headers: { 'Authorization': `Bearer ${jwt}` } // ส่ง JWT เพื่อยืนยันตัวตน
         });
         if (res.ok) {
-            const user = await res.json();
-            userDocId = user.documentId;
-            const favorites = user.favorites || [];
-            currentFavDocIds = favorites.map(f => f.documentId);
+            const user = await res.json(); // ดึงข้อมูลผู้ใช้
+            userDocId = user.documentId; // เก็บ Document ID ของผู้ใช้
+            const favorites = user.favorites || []; // รายการโปรดของผู้ใช้
+            currentFavDocIds = favorites.map(f => f.documentId); // ดึงเฉพาะ Document IDs
             
-            const isFav = currentFavDocIds.includes(contentDocId);
+            const isFav = currentFavDocIds.includes(contentDocId); // เช็คว่าเนื้อหานี้อยู่ในรายการโปรดไหม
             updateBtnUI(isFav);
         }
     } catch (err) { console.error(err); }
@@ -194,16 +191,16 @@ async function initFavoriteSystem(contentItem) {
 
     favoriteBtn.addEventListener('click', async (e) => {
         e.preventDefault();
-        // ปุ่ม Favorite ไม่ต้องเช็ค Login ซ้ำแล้ว เพราะถ้าไม่ Login จะเข้าหน้านี้ไม่ได้ตั้งแต่แรก
-        if (!userDocId) return; 
+        if (!userDocId) return; // ถ้าไม่มี Document ID ของผู้ใช้ ให้หยุดทำงาน
 
-        const isFavNow = btnIcon.classList.contains('bi-bookmark-fill');
-        let newFavs = isFavNow ? currentFavDocIds.filter(id => id !== contentDocId) : [...currentFavDocIds, contentDocId];
+        const isFavNow = btnIcon.classList.contains('bi-bookmark-fill'); // list current state
+        let newFavs = isFavNow ? currentFavDocIds.filter(id => id !== contentDocId) : [...currentFavDocIds, contentDocId]; // add or remove
 
         try {
-            favoriteBtn.style.pointerEvents = 'none';
-            if(btnText) btnText.innerText = 'Processing...';
+            favoriteBtn.style.pointerEvents = 'none'; // ป้องกันการคลิกซ้ำ
+            if(btnText) btnText.innerText = 'Processing...'; // เปลี่ยนข้อความชั่วคราว
 
+            // ส่งอัปเดตรายการโปรดใหม่ไปยัง API
             const res = await fetch(`${CONFIG.API_URL}/api/student-login/favorites`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },

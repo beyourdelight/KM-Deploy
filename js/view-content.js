@@ -1,21 +1,3 @@
-// frontend/web/js/view-content.js
-// function extractMediaUrl(media) {
-//     if (!media) return null;
-
-//     if (media.url) return media.url;  
-//     if (media.data?.attributes?.url) return media.data.attributes.url;
-
-//     return null;
-// }
-
-// function extractMediaMime(media) {
-//     if (!media) return null;
-
-//     if (media.mime) return media.mime;
-//     if (media.data?.attributes?.mime) return media.data.attributes.mime;
-
-//     return null;
-// }
 document.addEventListener("DOMContentLoaded", async () => {
     // 🛑 1. เช็คสิทธิ์ (Gatekeeper)
     const jwt = localStorage.getItem('jwt');
@@ -57,13 +39,14 @@ async function loadVideoContent() {
         console.log("🔗 Fetching Manual URL:", apiUrl);
         
         const response = await fetch(apiUrl);
-        
-        if (!response.ok) {
+
+        if (!response.ok) { 
             console.warn("⚠️ Complex URL failed, trying simple populate...");
             const simpleUrl = `${CONFIG.API_URL}/api/knowledge-items/${docId}?populate=*`;
             const fallbackRes = await fetch(simpleUrl);
             if (!fallbackRes.ok) throw new Error(`API Error: ${response.status}`);
             
+            // Logic: ถ้า Plan A พัง (เช่น เขียน Path ผิด หรือ Server ตอบ Error 400) ให้ใช้ Plan B
             const fallbackJson = await fallbackRes.json();
             processData(fallbackJson.data); 
             return;
@@ -272,13 +255,14 @@ function renderAttachments(attachments) {
         let iconClass = 'bi-file-earmark-text'; 
         let iconColor = 'text-secondary';
 
+        // ตรวจสอบนามสกุลไฟล์เพื่อกำหนดไอคอน
         if (fileExt.includes('pdf')) { iconClass = 'bi-file-earmark-pdf-fill'; iconColor = 'text-danger'; } 
         else if (fileExt.match(/(jpg|jpeg|png|gif|webp)$/)) { iconClass = 'bi-file-earmark-image-fill'; iconColor = 'text-primary'; } 
         else if (fileExt.match(/(doc|docx)$/)) { iconClass = 'bi-file-earmark-word-fill'; iconColor = 'text-primary'; } 
         else if (fileExt.match(/(xls|xlsx|csv)$/)) { iconClass = 'bi-file-earmark-excel-fill'; iconColor = 'text-success'; } 
         else if (fileExt.match(/(ppt|pptx)$/)) { iconClass = 'bi-file-earmark-slides-fill'; iconColor = 'text-warning'; } 
         else if (fileExt.match(/(zip|rar)$/)) { iconClass = 'bi-file-earmark-zip-fill'; iconColor = 'text-dark'; }
-
+        
         html += `
         <a href="${fileUrl}" target="_blank" class="text-decoration-none text-dark">
             <div class="card border mb-2 shadow-sm hover-effect" style="border: 1px solid #dee2e6;">
@@ -301,7 +285,8 @@ function renderAttachments(attachments) {
 // ==========================================
 // 3. ระบบ Favorite (Version Custom API)
 // ==========================================
-async function initFavoriteSystem(contentItem) {
+
+async function initFavoriteSystem(contentItem) { 
     const contentDocId = contentItem.documentId;
     const jwt = localStorage.getItem('jwt');
     const favoriteBtn = document.getElementById('favoriteBtn');
