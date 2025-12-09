@@ -1,4 +1,5 @@
 // js/search.js
+//index.html
 
 document.addEventListener("DOMContentLoaded", async () => {
     // 1. ดึงคำค้นหาจาก URL (เช่น ?keyword=การเงิน)

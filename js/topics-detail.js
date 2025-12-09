@@ -1,4 +1,5 @@
 // frontend/web/js/topics-detail.js
+// topics-detail.html
 
 document.addEventListener("DOMContentLoaded", async () => {
     // 🛑 1. เช็คสิทธิ์ก่อนเลย (Gatekeeper)

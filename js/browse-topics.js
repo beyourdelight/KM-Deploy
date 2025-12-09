@@ -1,5 +1,5 @@
 // frontend/web/js/browse-topics.js
-
+//categories.html และ index.html
 // ==========================================
 // 🛠️ Helper Functions (ฟังก์ชันช่วยทำงานทั่วไป)
 // ==========================================
@@ -185,7 +185,7 @@ async function loadLatestUpdates(page = 1) {
                         </div>
 
                         
-                        // ส่วนบอกประเภทเนื้อหา
+                        
                         <div class="mt-2">
                             <a href="${linkUrl}" class="text-decoration-none small text-primary fw-bold">
                                 ${hasVideo ? '<i class="bi-play-circle-fill me-1"></i> Video Content' : '<i class="bi-file-text-fill me-1"></i> Article'}
