@@ -102,7 +102,7 @@ async function incrementViewCount(docId) {
 
     try {
         // 4. ถ้ายิงไม่เคยดู ให้ยิง API ไปนับแต้ม
-        await fetch(`${CONFIG.API_URL}/api/knowledge-items/${docId}/increment-view`, {
+        await fetch(`${CONFIG.API_URL}/api/student-login/increment-view/${docId}`, { 
             method: 'PUT', 
             headers: { 'Content-Type': 'application/json' }
         });
