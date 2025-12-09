@@ -3,7 +3,7 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
     // 🛑 1. เช็คสิทธิ์ก่อนเลย (Gatekeeper)
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwt'); //json web token
     if (!jwt) {
         alert("กรุณาเข้าสู่ระบบเพื่อเข้าชมเนื้อหา");
         window.location.href = 'index.html'; // ดีดกลับหน้าแรก (หรือหน้า login.html)
@@ -80,12 +80,42 @@ async function loadTopicDetail() {
 }
 
 // ฟังก์ชันนับยอดวิว
+// async function incrementViewCount(docId) {
+//     try {
+//         await fetch(`${CONFIG.API_URL}/api/knowledge-items/${docId}/increment-view`, {
+//             method: 'PUT', headers: { 'Content-Type': 'application/json' }
+//         });
+//     } catch (e) { console.warn("View inc failed", e); }
+// }
 async function incrementViewCount(docId) {
+    // 1. ตั้งชื่อตัวแปรสำหรับเก็บประวัติการดู
+    const STORAGE_KEY = 'viewed_contents_log';
+
+    // 2. ดึงประวัติเก่าออกมาดู (ถ้าไม่มีให้เป็น Array ว่าง [])
+    let viewedList = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    // 3. เช็คว่า ID นี้เคยถูกบันทึกไปหรือยัง?
+    if (viewedList.includes(docId)) {
+        console.log(`👁️ Document ID ${docId} เคยถูกนับวิวแล้ว (Skipped)`);
+        return; // ⛔ จบการทำงานทันที ไม่ยิง API
+    }
+
     try {
+        // 4. ถ้ายิงไม่เคยดู ให้ยิง API ไปนับแต้ม
         await fetch(`${CONFIG.API_URL}/api/knowledge-items/${docId}/increment-view`, {
-            method: 'PUT', headers: { 'Content-Type': 'application/json' }
+            method: 'PUT', 
+            headers: { 'Content-Type': 'application/json' }
         });
-    } catch (e) { console.warn("View inc failed", e); }
+
+        // 5. ยิงสำเร็จแล้ว ให้จดลงสมุดบันทึก (localStorage) ว่าดูแล้ว
+        viewedList.push(docId);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(viewedList));
+        
+        console.log(`✅ นับวิวสำเร็จสำหรับ ID: ${docId}`);
+
+    } catch (e) { 
+        console.warn("View inc failed", e); 
+    }
 }
 
 // Helper: แปลง Rich Text
