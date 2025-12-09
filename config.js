@@ -4,6 +4,6 @@
 // };
 
 const CONFIG = {
-    API_URL: "https://relief-boxed-crest-arbitrary.trycloudflare.com",  
-    MEDIA_URL: "https://relief-boxed-crest-arbitrary.trycloudflare.com" 
+    API_URL: "https://url-technologies-safely-bags.trycloudflare.com ",  
+    MEDIA_URL: "https://url-technologies-safely-bags.trycloudflare.com " 
 };
