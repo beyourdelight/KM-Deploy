@@ -4,6 +4,6 @@
 // };
 
 const CONFIG = {
-    API_URL: "https://pro-correspondence-recognised-examines.trycloudflare.com",  
-    MEDIA_URL: "https://pro-correspondence-recognised-examines.trycloudflare.com" 
+    API_URL: "https://accuracy-fires-killing-stations.trycloudflare.com",  
+    MEDIA_URL: "https://accuracy-fires-killing-stations.trycloudflare.com" 
 };
