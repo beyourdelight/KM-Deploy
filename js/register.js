@@ -5,27 +5,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (registerForm) {
         registerForm.addEventListener('submit', async function(e) {
-            e.preventDefault(); // ป้องกันหน้าเว็บรีเฟรช
+            e.preventDefault(); // ป้องกันหน้าเว็บรีเฟรช(ให้เว้บมันส่ง background เอง)
 
-            // 1. ดึงค่าจาก Input
+            //ดึงค่าจาก Input
             const buasri_code = document.getElementById('buasriInput').value;
             const email = document.getElementById('emailInput').value;
             const password = document.getElementById('passwordInput').value;
 
-            // 2. เตรียมข้อมูลส่งไปหา Strapi
-            // URL นี้ต้องตรงกับเครื่องของคุณ (Backend)
-            // เปลี่ยนจาก external-auth เป็น student-login
+            // เตรียมข้อมูลส่งไปหา Strapi
             // const API_URL = 'http://localhost:1337/api/student-login/register';
             const API_URL = `${CONFIG.API_URL}/api/student-login/register`;
 
             try {
-                // เปลี่ยนปุ่มเป็นสถานะกำลังโหลด (Optional UX)
+                // เปลี่ยนปุ่มเป็นสถานะกำลังโหลด
                 const submitBtn = registerForm.querySelector('button[type="submit"]');
                 const originalText = submitBtn.innerText;
                 submitBtn.innerText = 'Signing Up...';
                 submitBtn.disabled = true;
 
-                // 3. ยิง Request ไปที่ API
+                //ยิง Request ไปที่ API
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 
@@ -38,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                 });
 
-                const data = await response.json();
+                const data = await response.json(); // รับผลลัพธ์กลับมา
 
-                // 4. ตรวจสอบผลลัพธ์
+                // ตรวจสอบผลลัพธ์
                 if (response.ok) {
                     // สำเร็จ: บันทึก Token ลงเครื่อง
                     localStorage.setItem('jwt', data.jwt);

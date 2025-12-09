@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // ห้ามรีเฟรชหน้า
+            e.preventDefault(); // ป้องกันหน้าเว็บรีเฟรช(ให้เว้บมันส่ง background เอง)
 
             // 1. รับค่าจากฟอร์ม
             const identifier = document.getElementById('loginIdentifier').value;
@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.innerText = 'Logging in...';
                 submitBtn.disabled = true;
 
-                // 2. ยิง API Login ของ Strapi (มาตรฐาน)
                 // const response = await fetch('http://localhost:1337/api/auth/local', {
                 const response = await fetch(`${CONFIG.API_URL}/api/auth/local`, {
                     method: 'POST',

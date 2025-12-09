@@ -5,7 +5,7 @@ async function loadFeaturedSection() {
     if (!container) return; 
 
     try {
-        // 1. ดึง 3 อันดับแรก (views สูงสุด)
+        //ดึง 3 อันดับแรก (views สูงสุด)
         const response = await fetch(`${CONFIG.API_URL}/api/knowledge-items?sort[0]=views:desc&pagination[pageSize]=3&populate=*`);
         const result = await response.json();
         const items = result.data;
@@ -18,12 +18,12 @@ async function loadFeaturedSection() {
         let htmlContent = '';
 
         items.forEach((item) => {
-            // -- 1. หารูปภาพ --
+            // หารูปภาพ
             const imgUrl = item.coverImage 
                 ? `${CONFIG.MEDIA_URL}${item.coverImage.url}` 
                 : 'images/topics/undraw_Remote_design_team_re_urdx.png'; 
 
-            // -- 2. เช็ค Logic ลิงก์  --
+            // เช็ค Logic ลิงก์ 
             // ถ้ามีวิดีโอ (videoList มีข้อมูล) -> ไปหน้า view-content.html
             // ถ้าไม่มีวิดีโอ (เป็นบทความ) -> ไปหน้า topics-detail.html
             const hasVideo = item.videoList && item.videoList.length > 0;
@@ -31,7 +31,7 @@ async function loadFeaturedSection() {
                 ? `view-content.html?id=${item.documentId}` 
                 : `topics-detail.html?id=${item.documentId}`;
 
-            // -- 3. สร้างการ์ด --
+            //  สร้างการ์ด 
             htmlContent += `
                 <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
                     <div class="custom-block bg-white shadow-lg h-100">

@@ -7,18 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
 // 1. โหลด Logo (เหมือนเดิม)
 async function loadGlobalSettings() {
     try {
-        const url = `${CONFIG.API_URL}/api/global?populate=*`;
+        const url = `${CONFIG.API_URL}/api/global?populate=*`; // ดึงข้อมูล Global Settings ทั้งหมด
         const response = await fetch(url);
         if (!response.ok) return;
 
         const result = await response.json();
         const data = result.data;
 
-        if (data) {
+        if (data) {  // ตรวจสอบว่ามีข้อมูลหรือไม่
             if (data.navbar_logo) {
                 const imgUrl = `${CONFIG.MEDIA_URL}${data.navbar_logo.url}`;
                 const navLogo = document.getElementById('nav-logo');
-                if (navLogo) navLogo.src = imgUrl;
+                if (navLogo) navLogo.src = imgUrl; 
             }
             if (data.footer_logo) {
                 const imgUrl = `${CONFIG.MEDIA_URL}${data.footer_logo.url}`;
@@ -29,7 +29,7 @@ async function loadGlobalSettings() {
     } catch (error) { console.error("Global Settings Error:", error); }
 }
 
-// 2. เช็คสถานะ Login + จัดการ Logout (แก้ไขใหม่)
+//เช็คสถานะ Login + จัดการ Logout 
 function checkAuthStatus() {
     const jwt = localStorage.getItem('jwt');
     const userDataStr = localStorage.getItem('user_data');
@@ -39,22 +39,21 @@ function checkAuthStatus() {
         try { user = JSON.parse(userDataStr); } catch(e) {}
     }
     
-    // Elements
+    //Elements
     const profileDropdown = document.querySelector('.navbar .dropdown'); 
     const profileMenu = document.querySelector('.dropdown-menu'); 
     const navbarRightSide = document.querySelector('.d-none.d-lg-flex'); 
     const mobileMenu = document.querySelector('.navbar-collapse .navbar-nav');
     
-    // --- 🟢 จับปุ่ม Logout ด้วย ID (แม่นยำกว่า) ---
+    // จับปุ่ม Logout ด้วย ID
     const logoutBtn = document.getElementById('logoutBtn');
 
     if (jwt) {
-        // === LOGGED IN ===
+        // โชว์เมนูโปรไฟล์
         if (profileDropdown) {
             profileDropdown.style.display = 'block';
 
-            // เช็คว่าเป็น Staff ไหม? เพื่อเพิ่มปุ่ม Dashboard
-            // แก้เป็น: เช็ค position เป็นหลัก (เพราะ Role อาจจะ populate มาไม่ถึง)
+            // เช็คว่าเป็น Staff เพื่อเพิ่มปุ่ม Dashboard
 const isStaff = user && (user.position === 'Staff' || (user.role && user.role.name === 'Staff'));
 
             if (isStaff && !document.getElementById('dashLink')) {
@@ -71,14 +70,13 @@ const isStaff = user && (user.position === 'Staff' || (user.role && user.role.na
         const existingMobileLogin = document.getElementById('mobileLoginLink');
         if (existingMobileLogin) existingMobileLogin.parentElement.remove();
 
-        // --- 🟢 สั่งให้ปุ่ม Logout ทำงาน ---
         if (logoutBtn) {
-            // ล้าง Event เก่าออกก่อน (เผื่อเรียกฟังก์ชันซ้ำ) แล้วใส่ใหม่
+            //
             const newLogoutBtn = logoutBtn.cloneNode(true);
             logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
             
             newLogoutBtn.addEventListener('click', (e) => {
-                e.preventDefault(); // ห้ามรีเฟรชหน้า
+                e.preventDefault();
                 if(confirm('ยืนยันการออกจากระบบ?')) {
                     // ล้างข้อมูลทั้งหมด
                     localStorage.clear();
@@ -89,7 +87,7 @@ const isStaff = user && (user.position === 'Staff' || (user.role && user.role.na
         }
 
     } else {
-        // === GUEST ===
+        // GUEST
         if (profileDropdown) profileDropdown.style.display = 'none';
 
         if (navbarRightSide && !document.getElementById('dynamicLoginBtn')) {
